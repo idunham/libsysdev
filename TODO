@@ -1,16 +1,36 @@
-Notes on libsyspath...
+Notes on libsysdev...
+
+The general purpose is to provide a sysfs-based library that can replace
+libudev. This does not mean API/ABI-compatible; rather, it should provide
+similar functionality without a daemon, and a program should be able to
+link with both libsysdev and libudev at the same time (so libsysdev can
+be used as a fallback when udevd is not running).
+The --enable-sysfs code in mesa provided inspiration.
+If someone wants to write a partial udev-compat shim, I'm open to including it.
+
+The proposed API is based on a quick glance through xf86-input-evdev
+and mesa to see where they need udev/what they do instead, plus a comment
+on the devuan mailing list from Karl Hammar.
+It relies on the user using open()/stat()/major()/minor() directly and
+providing a little connecting logic.
+By my reading, sysdev_getsyspath() should be enough for evdev,
+while mesa would need sysdev_getproductids() as well.
+
 
 things we need to find:
 -/dev/name given major minor ischar
- (ischar = ('b'|'c') - 'b')
+ (ischar = ('b'|'c') - 'b' or ISCHR(st.st_mode))
 -/sys/devices/.../ given /dev/name (or major minor devtype)
  (look for .../dev containing major:minor, and
  .../alignment_offset or uevent containing DEVTYPE=(disk|partition))
  
 /* given major/minor/type, return the device (in /dev) */
 char * sysdev_getdevname(int major, int minor, int ischar);
+
 /* given major/minor/type, return the directory in /sys */
 char * sysdev_getsyspath(int major, int minor, int ischar);
-/* given syspath, set vendor_id and device_id returning 0 for success */
-int sysdev_getproductids(int *vendor_id, int *device_id, char *syspath);
+
+DONE:
+/* given fd of syspath, set vendor_id and device_id; return 0 for success */
+int sysdev_getproductids(int *vendor_id, int *device_id, int sysfd);
 
