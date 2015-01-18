@@ -1,0 +1,16 @@
+Notes on libsyspath...
+
+things we need to find:
+-/dev/name given major minor ischar
+ (ischar = ('b'|'c') - 'b')
+-/sys/devices/.../ given /dev/name (or major minor devtype)
+ (look for .../dev containing major:minor, and
+ .../alignment_offset or uevent containing DEVTYPE=(disk|partition))
+ 
+/* given major/minor/type, return the device (in /dev) */
+char * sysdev_getdevname(int major, int minor, int ischar);
+/* given major/minor/type, return the directory in /sys */
+char * sysdev_getsyspath(int major, int minor, int ischar);
+/* given syspath, set vendor_id and device_id returning 0 for success */
+int sysdev_getproductids(int *vendor_id, int *device_id, char *syspath);
+
