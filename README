@@ -1,4 +1,4 @@
-Notes on libsysdev...
+libsysdev introduction
 
 The general purpose is to provide a sysfs-based library that can replace
 libudev. This does not mean API/ABI-compatible; rather, it should provide
@@ -8,25 +8,14 @@ be used as a fallback when udevd is not running).
 The --enable-sysfs code in mesa provided inspiration.
 If someone wants to write a partial udev-compat shim, I'm open to including it.
 
-The proposed API is based on a quick glance through xf86-input-evdev
-and mesa to see where they need udev/what they do instead, plus a comment
-on the devuan mailing list from Karl Hammar.
+The API is based on a quick glance through xf86-input-evdev
+and mesa to see where they need udev/what they do instead.
 It relies on the user using open()/stat()/major()/minor() directly and
 providing a little connecting logic.
 By my reading, sysdev_getsyspath() should be enough for evdev,
 while mesa would need sysdev_getproductids() as well.
 
-
-things we need to find:
--/dev/name given major minor ischar
- (ischar = ('b'|'c') - 'b' or ISCHR(st.st_mode))
--/sys/devices/.../ given /dev/name (or major minor devtype)
- Look at /sys/dev/(block|char)/<major>:<minor>,
- then use readlink to get the canonical name.
- 
- 
-/* given major/minor/type, return the device (in /dev) */
-char * sysdev_getdevname(unsigned int major, unsigned int minor, int ischar);
+Thanks to Karl Hammar for inspiration to do this.
 
 DONE:
 /* given major/minor/type, return the directory in /sys */
