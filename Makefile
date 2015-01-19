@@ -7,6 +7,7 @@
 DESTDIR ?=
 PREFIX  ?= /usr
 LIBDIR  ?= ${PREFIX}/lib
+BINDIR  ?= ${PREFIX}/bin
 INCDIR  ?= ${PREFIX}/include
 
 # set AR and CC if you're cross-compiling
@@ -33,10 +34,11 @@ SOOBJS  = getprodids.lo \
 	getsyspath.lo
 
 
-all: ${LIBS}
+all: ${LIBS} devinfo
 
-install: ${LIBS}
+install: ${LIBS} devinfo
 	install -d -m 0755 ${DESTDIR}${LIBDIR}
+	install -d -m 0755 ${DESTDIR}${BINDIR}
 	install -d -m 0755 ${DESTDIR}${INCDIR}/libsysdev
 # installing the shared lib?
 	echo ${LIBS} | grep libsysdev.so && \
@@ -45,9 +47,10 @@ install: ${LIBS}
 	    install -m 0644 libsysdev.a ${DESTDIR}${LIBDIR}
 	install -m 0644 libsysdev/sysdev.h  \
 	    ${DESTDIR}${INCDIR}/libsysdev/sysdev.h
+	install -m 0644 devinfo ${DESTDIR}${BINDIR}
 
 clean:
-	rm -f ${SOOBJS} ${AROBJS} libsysdev.so* libsysdev.a
+	rm -f ${SOOBJS} ${AROBJS} libsysdev.so* libsysdev.a devinfo
 
 %.lo: %.c
 	${CC} ${CFLAGS} ${CPPFLAGS} ${XFLAGS} ${PIC} -c -o $@ $<
@@ -62,5 +65,9 @@ libsysdev.so.${SOVER}: ${SOOBJS}
 
 libsysdev.a: ${AROBJS}
 	${AR} -rcs $@ ${AROBJS}
+
+%: util/%.c ${LIBS}
+	${CC} -I. ${CFLAGS} ${CPPFLAGS} ${XFLAGS} \
+	    util/$@.c -o $@ ${LDFLAGS} -L. -lsysdev 
 
 .PHONY: all clean install
