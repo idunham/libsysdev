@@ -10,6 +10,8 @@
 #include <fcntl.h>
 #include <errno.h>
 
+#include <libsysdev/sysdev.h>
+
 /* Given major/minor/type, return the directory in /sys 
  * Returns NULL on failure.
  */

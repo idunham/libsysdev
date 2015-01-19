@@ -8,6 +8,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#include <libsysdev/sysdev.h>
+
 /* Read up to bufsiz bytes of name into buf, return result of read */
 static int sdp_readfileat(char *buf, ssize_t bufsiz, int dfd, char *name)
 {
