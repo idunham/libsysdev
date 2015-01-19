@@ -2,6 +2,7 @@
  * No rights reserved, see LICENSE for details.
  */
 #include <unistd.h>
+#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -18,20 +19,22 @@
 char * sysdev_getsyspath(unsigned int major, unsigned int minor, int ischar)
 {
 	char tpath[256], *syspath = NULL;
-	size_t len;
+	ssize_t len;
 	
 	errno = 0;
-	if (sizeof(tpath) <= snprintf(tpath, sizeof(tpath), "/sys/dev/%s/%u:%u",
-			ischar ? "char" : "block", major, minor)) {
-		syspath = calloc(_PC_PATH_MAX, 1);
-		if (syspath && (readlink(tpath, syspath, _PC_PATH_MAX)
-				> _PC_PATH_MAX) || errno ) {
-			free(syspath);
-			syspath = NULL;
+	len = snprintf(tpath, sizeof(tpath), "/sys/dev/%s/%u:%u",
+		ischar ? "char" : "block", major, minor);
+	if (len < sizeof(tpath)) {
+		syspath = calloc(PATH_MAX, 1);
+		if (syspath) {
+			len = readlink(tpath, syspath, PATH_MAX);
+			if ((len < 6) || (len > PATH_MAX)) {
+				free(syspath);
+				syspath = NULL;
+			}
 		}
 		/* Overwrite the start of syspath (../..) with "/sys/" */
 		if (syspath) memcpy(syspath, "/sys/", 5);
-		return syspath;
 	}
-	return NULL;
+	return syspath;
 }
