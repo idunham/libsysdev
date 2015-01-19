@@ -29,9 +29,11 @@ LIBS   ?= libsysdev.a libsysdev.so.${SOVER}
 SOVER   = 0
 SOMIN   = 0
 AROBJS  = getprodids.o  \
-	getsyspath.o
+	getsyspath.o    \
+	convenience.o
 SOOBJS  = getprodids.lo \
-	getsyspath.lo
+	getsyspath.lo   \
+	convenience.lo
 
 
 all: ${LIBS} devinfo

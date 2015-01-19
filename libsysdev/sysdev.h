@@ -37,4 +37,20 @@ int sysdev_getproductids(int *vendor_id, int *device_id, int sysfd);
  */
 char * sysdev_getsyspath(unsigned int major, unsigned int minor, int ischar);
 
+/* given fd of device, return the directory in /sys
+ * returns a calloc'd string (or NULL on failure)
+ * sets errno = EINVAL if devfd is not a device
+ */
+char *sysdev_devfd_to_syspath(int devfd);
+
+/* given fd of device, return fd of corresponding syspath
+ * returns -1 on failure, sets errno = EINVAL if devfd is not a device
+ */
+int sysdev_devfd_to_sysfd(int devfd);
+
+/* given fd of device, read vendor_id and device_id
+ * returns 0 for success, nonzero for failure
+ */
+int sysdev_devfd_to_pciid(int *vendor_id, int *device_id, int devfd);
+
 #endif
