@@ -27,7 +27,7 @@ static int sdp_readfileat(char *buf, ssize_t bufsiz, int dfd, char *name)
 /* given fd of syspath, set vendor_id and device_id; return 0 for success */
 int sysdev_getproductids(int *vendor_id, int *device_id, int sysfd)
 {
-	char id[8], end;
+	char id[8];
 
 	if (sdp_readfileat(id, 8, sysfd, "vendor") < 6)
 		return -1;

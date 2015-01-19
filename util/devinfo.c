@@ -26,7 +26,7 @@ int main(int argc, char **argv)
 
 	if (argc < 2)
 		usage(argv[0]);
-	if (stat(argv[1], &st) || (!st.st_mode & (S_IFCHR|S_IFBLK)))
+	if (stat(argv[1], &st) || (!(st.st_mode & (S_IFCHR|S_IFBLK))))
 		return 1;
 	syspath = sysdev_getsyspath(major(st.st_rdev), minor(st.st_rdev),
 			S_ISCHR(st.st_mode));
