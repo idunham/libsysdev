@@ -1,7 +1,7 @@
 /* Copyright Isaac Dunham, in the year of our Lord 2015 
  * No rights reserved, see LICENSE for details.
  */
-#define _BSD_SOURCE /* for major()/minor()*/
+#define _BSD_SOURCE		/* for major()/minor() */
 #include <unistd.h>
 #include <limits.h>
 #include <stdlib.h>
@@ -22,14 +22,13 @@ char *sysdev_devfd_to_syspath(int devfd)
 {
 	struct stat st;
 
-	if (fstat(devfd, &st) || !(st.st_mode&(S_IFCHR|S_IFBLK)))
-	{
+	if (fstat(devfd, &st) || !(st.st_mode & (S_IFCHR | S_IFBLK))) {
 		if (!errno)
 			errno = EINVAL;
 		return NULL;
 	}
 	return sysdev_getsyspath(major(st.st_rdev), minor(st.st_rdev),
-			S_ISCHR(st.st_mode));
+				 S_ISCHR(st.st_mode));
 }
 
 /* given fd of device, return fd of corresponding syspath

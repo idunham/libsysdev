@@ -31,10 +31,10 @@ int sysdev_getproductids(int *vendor_id, int *device_id, int sysfd)
 
 	if (sdp_readfileat(id, 8, sysfd, "vendor") < 6)
 		return -1;
-	*vendor_id = (int)strtol(id, (char**)0, 16);
+	*vendor_id = (int)strtol(id, (char **)0, 16);
 
 	if (sdp_readfileat(id, 8, sysfd, "device") < 6)
 		return -1;
-	*device_id = (int)strtol(id, (char**)0, 16);
+	*device_id = (int)strtol(id, (char **)0, 16);
 	return 0;
 }

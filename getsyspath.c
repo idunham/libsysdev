@@ -16,14 +16,14 @@
 /* Given major/minor/type, return the directory in /sys 
  * Returns NULL on failure.
  */
-char * sysdev_getsyspath(unsigned int major, unsigned int minor, int ischar)
+char *sysdev_getsyspath(unsigned int major, unsigned int minor, int ischar)
 {
 	char tpath[256], *syspath = NULL;
 	ssize_t len;
-	
+
 	errno = 0;
 	len = snprintf(tpath, sizeof(tpath), "/sys/dev/%s/%u:%u",
-		ischar ? "char" : "block", major, minor);
+		       ischar ? "char" : "block", major, minor);
 	if (len < sizeof(tpath)) {
 		syspath = calloc(PATH_MAX, 1);
 		if (syspath) {
