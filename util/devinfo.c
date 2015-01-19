@@ -32,9 +32,9 @@ int main(int argc, char **argv)
 			S_ISCHR(st.st_mode));
 	if (syspath) sysfd = open(syspath, O_RDONLY);
 	if (sysfd > -1) {
-		sysdev_getproductids(&vend, &dev, sysfd);
 		printf("%s", syspath);
-		if (vend) printf("\t%X\t%X",  vend, dev);
+		if (!sysdev_getproductids(&vend, &dev, sysfd))
+			printf("\t%X\t%X",  vend, dev);
 		printf("\n");
 	}
 	if (sysfd > -1) close(sysfd);

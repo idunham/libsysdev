@@ -28,13 +28,16 @@ char * sysdev_getsyspath(unsigned int major, unsigned int minor, int ischar)
 		syspath = calloc(PATH_MAX, 1);
 		if (syspath) {
 			len = readlink(tpath, syspath, PATH_MAX);
-			if ((len < 6) || (len > PATH_MAX)) {
+			if ((len < 6) || (len > PATH_MAX - 8)) {
 				free(syspath);
 				syspath = NULL;
 			}
 		}
 		/* Overwrite the start of syspath (../..) with "/sys/" */
-		if (syspath) memcpy(syspath, "/sys/", 5);
+		if (syspath) {
+			memcpy(syspath, "/sys/", 5);
+			strncat(syspath, "/device", PATH_MAX - 1);
+		}
 	}
 	return syspath;
 }
