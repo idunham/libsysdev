@@ -26,6 +26,7 @@ LIBS   ?= libsysdev.a libsysdev.so.${SOVER}
 # the same ABI.
 # SOMIN is the minor version; update for a release with a new symbol export
 # AROBJS/SOOBJS should be updated to add new source files.
+PKGVER  = 0.1.0
 SOVER   = 0
 SOMIN   = 0
 AROBJS  = getprodids.o  \
@@ -38,8 +39,8 @@ SOOBJS  = getprodids.lo \
 
 all: ${LIBS} devinfo
 
-install: ${LIBS} devinfo
-	install -d -m 0755 ${DESTDIR}${LIBDIR}
+install: ${LIBS} devinfo libsysdev.pc
+	install -d -m 0755 ${DESTDIR}${LIBDIR}/pkgconfig
 	install -d -m 0755 ${DESTDIR}${BINDIR}
 	install -d -m 0755 ${DESTDIR}${INCDIR}/libsysdev
 # installing the shared lib?
@@ -47,18 +48,30 @@ install: ${LIBS} devinfo
 	    install -m 0644 libsysdev.so* ${DESTDIR}${LIBDIR}/
 	echo ${LIBS} | grep libsysdev.a  && \
 	    install -m 0644 libsysdev.a ${DESTDIR}${LIBDIR}
+	install -m 0644 libsysdev.pc ${DESTDIR}${LIBDIR}/pkgconfig/
 	install -m 0644 libsysdev/sysdev.h  \
 	    ${DESTDIR}${INCDIR}/libsysdev/sysdev.h
 	install -m 0644 devinfo ${DESTDIR}${BINDIR}
+	
 
 clean:
-	rm -f ${SOOBJS} ${AROBJS} libsysdev.so* libsysdev.a devinfo
+	rm -f ${SOOBJS} ${AROBJS} libsysdev.so* libsysdev.a devinfo \
+	    libsysdev.pc
 
 %.lo: %.c
 	${CC} ${CFLAGS} ${CPPFLAGS} ${XFLAGS} ${PIC} -c -o $@ $<
 
 %.o: %.c
 	${CC} ${CFLAGS} ${CPPFLAGS} ${XFLAGS} -c -o $@ $<
+
+%.pc: %.pc.in
+	sed -e "s:@LIBDIR@:${LIBDIR}:"  \
+	    -e "s:@INCDIR@:${INCDIR}:"  \
+	    -e "s:@VERSION@:${PKGVER}:" \
+	    $< | { test "${LIBDIR}" = "/usr/lib" && \
+	sed -e 's/-L.*}//' -e '/^libdir.*/d' || cat; } | \
+	{ test "${INCDIR}" = "/usr/include" && \
+	sed -e '/^Cflags.*/d' -e '/^incdir.*/d' || cat; } > $@
 
 libsysdev.so.${SOVER}: ${SOOBJS}
 	${CC} ${LDFLAGS} -shared -o $@.${SOMIN} -Wl,-soname,$@ ${SOOBJS}

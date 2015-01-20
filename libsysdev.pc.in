@@ -1,0 +1,8 @@
+libdir=@LIBDIR@
+incdir=@INCDIR@
+
+Name: libsysdev
+Version: @VERSION@
+Description: Library to get information from sysfs about devices
+Cflags: -I${incdir}
+Libs: -L${libdir} -lsysdev

@@ -24,7 +24,6 @@ The bulk of the library is copyright
 TODO:
 Handle multilib and non-pure64 configurations better than
 expecting the builder to set LIBDIR.
-Provide a .pc file for pkgconf/pkg-config.
 Get evdev to use this.
 
 API:
