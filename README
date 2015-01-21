@@ -22,9 +22,12 @@ The bulk of the library is copyright
  No rights reserved, see LICENSE for details.
 
 TODO:
-Handle multilib and non-pure64 configurations better than
-expecting the builder to set LIBDIR.
-Get evdev to use this.
+* Handle multiarch and multilib configurations better than
+  expecting the builder to set LIBDIR.
+* (WIP) Get evdev to use this.
+  A first try, which has *not* been tested beyond compile, is available at
+  https://github.com/idunham/xf86-input-evdev
+  (in branch sysdev).
 
 API:
 libsysdev uses the sysdev_ namespace for public APIs.
