@@ -51,7 +51,7 @@ install: ${LIBS} devinfo libsysdev.pc
 	install -m 0644 libsysdev.pc ${DESTDIR}${LIBDIR}/pkgconfig/
 	install -m 0644 libsysdev/sysdev.h  \
 	    ${DESTDIR}${INCDIR}/libsysdev/sysdev.h
-	install -m 0644 devinfo ${DESTDIR}${BINDIR}
+	install -m 0755 devinfo ${DESTDIR}${BINDIR}
 	
 
 clean:
