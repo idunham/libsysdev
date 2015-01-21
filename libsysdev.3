@@ -1,0 +1,76 @@
+.\" Copyright (c) 2015 A.D. Isaac Dunham, no rights reserved
+.\" Released under the libsysdev license
+.TH "LIBSYSDEV" 1 2015 "libsysdev"
+.SH NAME
+libsysdev \- library to access sysfs information about devices
+.SH SYNOPSIS
+#include <libsysdev/sysdev.h>
+
+char *sysdev_getsyspath(unsigned int major, unsigned int minor, int ischar);
+char *sysdev_devfd_to_syspath(int devfd);
+int sysdev_devfd_to_sysfd(int devfd);
+int sysdev_devfd_to_pciid(int *vendor_id, int *device_id, int devfd);
+int sysdev_getproductids(int *vendor_id, int *device_id, int sysfd);
+
+.SH DESCRIPTION
+In general, "devfd" means a file descriptor referring to a device.
+"syspath" means a string containing an absolute path within /sys.
+"sysfd" means a file descriptor referring to a syspath.
+
+sysdev_getsyspath(major, minor, ischar) takes as its first two arguments
+the major and minor of a device; ischar should be nonzero if the device
+is a character device, 0 if it is a block device.
+On success it returns a calloc()ed buffer of length PATH_MAX, containing
+a path of the general form "/sys/devices/.../device" that corresponds to
+the device described by the arguments.
+
+sysdev_devfd_to_syspath(devfd) takes as its only argument a file descriptor
+referring to a device node. It returns the same output as sysdev_getsyspath().
+
+Note that, for simplicity of implementation, this version of libsysdev uses
+"/sys//devices/..."; relying on a fixed offset from the start is wrong,
+and this behavior may well change in future.
+
+sysdev_devfd_to_sysfd(devfd) takes as its only argument a file descriptor
+referring to a device node. It returns a file descriptor referring to a
+corresponding directory in /sys.
+
+sysdev_getproductids(int *vendor_id, int *device_id, int sysfd) fills vendor_id
+with the PCI vendor number and device_id with the PCI device number found in
+the sysfs directory pointed to by sysfd. It returns 0 if it is successful,
+nonzero if it fails.
+
+sysdev_devfd_to_pciid(int *vendor_id, int *device_id, int devfd) fills
+vendor_id with the PCI vendor number and device_id with the PCI device
+number for the device to which devfd refers. It returns 0 on success,
+nonzero on failure.
+
+.SH RETURN VALUE
+sysdev_getsyspath() and sysdev_devfd_to_syspath() return the sysfs directory
+corresponding to the device referred to by their arguments.
+If it cannot be determined, they return NULL.
+
+sysdev_devfd_to_sysfd() returns a file descriptor for the sysfs directory corresponding to the device of which devfd is a file descriptor.
+
+sysdev_getproductids() fills its first two arguments with the PCI ids
+found in the sysfs directory pointed to by sysfd.
+It returns 0 if it is successful, nonzero if it fails.
+sysdev_devfd_to_pciid(int *vend, int *chip, int devfd);
+is equivalent to
+sysdev_getproductids(int *vend, int *chip, sysdev_devfd_to_sysfd(devfd));
+and has the same return values.
+
+.SH ERRORS
+Functions that take a device fd as an argument (sysdev_devfd_to_syspath(),
+sysdev_devfd_to_sysfd(), and sysdev_devfd_to_pciid()) will set
+errno = EINVAL if devfd does not refer to a device.
+
+Functions that take a device fd as an argument call fstat() internally and
+can fail with any failure that fstat() encounters.
+
+sysdev_devfd_to_sysfd() and sysdev_getproductids() call open() internally
+and can fail with any failure that open() encounters.
+
+sysdev_getsyspath(), sysdev_devfd_to_syspath(), sysdev_devfd_to_sysfd(),
+and sysdev_devfd_to_pciid() use calloc() internally and can theoretically
+set any error which it sets.
