@@ -9,6 +9,9 @@ PREFIX  ?= /usr
 LIBDIR  ?= ${PREFIX}/lib
 BINDIR  ?= ${PREFIX}/bin
 INCDIR  ?= ${PREFIX}/include
+DATAROOTDIR ?= ${PREFIX}/share
+DOCDIR      ?= ${DATAROOTDIR}/doc/libsysdev
+MANDIR      ?= ${DATAROOTDIR}/man
 
 # set AR and CC if you're cross-compiling
 AR     ?= ar
@@ -40,9 +43,14 @@ SOOBJS  = getprodids.lo \
 all: ${LIBS} devinfo
 
 install: ${LIBS} devinfo libsysdev.pc
+	echo "Making directories..."
 	install -d -m 0755 ${DESTDIR}${LIBDIR}/pkgconfig
 	install -d -m 0755 ${DESTDIR}${BINDIR}
 	install -d -m 0755 ${DESTDIR}${INCDIR}/libsysdev
+	install -d -m 0755 ${DESTDIR}${DOCDIR}
+	install -d -m 0755 ${DESTDIR}${MANDIR}/man1
+	install -d -m 0755 ${DESTDIR}${MANDIR}/man3
+	echo "Installing libs..."
 # installing the shared lib?
 	echo ${LIBS} | grep libsysdev.so && \
 	    install -m 0644 libsysdev.so* ${DESTDIR}${LIBDIR}/
@@ -51,7 +59,12 @@ install: ${LIBS} devinfo libsysdev.pc
 	install -m 0644 libsysdev.pc ${DESTDIR}${LIBDIR}/pkgconfig/
 	install -m 0644 libsysdev/sysdev.h  \
 	    ${DESTDIR}${INCDIR}/libsysdev/sysdev.h
+	echo "Installing utilities..."
 	install -m 0755 devinfo ${DESTDIR}${BINDIR}
+	echo "Installing documentation..."
+	install -m 0644 libsysdev.3 ${DESTDIR}${MANDIR}/man3/
+	install -m 0644 util/devinfo.1 ${DESTDIR}${MANDIR}/man1/
+	install -m 0644 README LICENSE ${DESTDIR}${DOCDIR}/ 
 	
 
 clean:
