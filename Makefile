@@ -53,7 +53,9 @@ install: ${LIBS} devinfo libsysdev.pc
 	echo "Installing libs..."
 # installing the shared lib?
 	echo ${LIBS} | grep libsysdev.so && \
-	    install -m 0644 libsysdev.so* ${DESTDIR}${LIBDIR}/
+	    install -m 0644 libsysdev.so.${SOVER}.${SOMIN} ${DESTDIR}${LIBDIR}/
+	ln -sf libsysdev.so.${SOVER}.${SOMIN} ${DESTDIR}${LIBDIR}/libsysdev.so.${SOVER}
+	ln -sf libsysdev.so.${SOVER}.${SOMIN} ${DESTDIR}${LIBDIR}/libsysdev.so
 	echo ${LIBS} | grep libsysdev.a  && \
 	    install -m 0644 libsysdev.a ${DESTDIR}${LIBDIR}
 	install -m 0644 libsysdev.pc ${DESTDIR}${LIBDIR}/pkgconfig/
