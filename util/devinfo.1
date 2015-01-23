@@ -4,15 +4,23 @@
 .SH NAME
 devinfo \- print information about a device
 .SH SYNOPSIS
-devinfo /dev/node
+.BI "devinfo " /dev/node
 .SH DESCRIPTION
-\fIdevinfo\fP prints the corresponding sysfs path and (if applicable)
+.BR devinfo
+prints the corresponding sysfs path and (if applicable)
 the PCI IDs for the hardware.
 .SH EXAMPLE
-$ \fB devinfo /dev/dri/card0 \fP 
+.SS Example 1 shows the PCI IDs of the primary graphics card:
+.nf
+$ devinfo /dev/dri/card0
 /sys//devices/pci0000:00/0000:00:02.0/drm/card0/device	8086	27AE 
+.fi
 
-$ \fB for i in /dev/input/*; do cat `devinfo $i`/name; done \fP
-
-Example 1 shows the PCI IDs of the primary graphics card.
-Example 2 shows the "name" assgned by the kernel to each input device.
+.SS Example 2 shows the "name" assgned by the kernel to each input device:
+.nf
+$ for i in /dev/input/*; do a=`devinfo $i | cut -f1`; if [ -n "$a" ]; then cat $a/name; fi; done
+AT Translated Set 2 keyboard
+HDA Digital PCBeep
+HDA VIA VT82xx Front Headphone
+HDA VIA VT82xx Line Out CLFE
+.fi
