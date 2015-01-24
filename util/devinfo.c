@@ -18,15 +18,13 @@ void usage(char *progname)
 	exit(1);
 }
 
-int main(int argc, char **argv)
+int shownode(char *arg)
 {
 	char *syspath;
-	int sysfd = -1, vend = 0, dev = 0;
+	int sysfd = -1, vend = 0, dev = 0, ret = 0;
 	struct stat st;
 
-	if (argc < 2)
-		usage(argv[0]);
-	if (stat(argv[1], &st) || (!(st.st_mode & (S_IFCHR | S_IFBLK))))
+	if (stat(arg, &st) || (!(st.st_mode & (S_IFCHR | S_IFBLK))))
 		return 1;
 	syspath = sysdev_getsyspath(major(st.st_rdev), minor(st.st_rdev),
 				    S_ISCHR(st.st_mode));
@@ -37,10 +35,23 @@ int main(int argc, char **argv)
 		if (!sysdev_getproductids(&vend, &dev, sysfd))
 			printf("\t%X\t%X", vend, dev);
 		printf("\n");
-	}
-	if (sysfd > -1)
 		close(sysfd);
+	} else
+		ret = 1;
 	if (syspath)
 		free(syspath);
-	return 0;
+	return ret;
+}
+
+int main(int argc, char **argv)
+{
+	int i, ret = 0;
+
+	if (argc < 2)
+		usage(argv[0]);
+
+	for (i=1; i < argc;) {
+		ret |= shownode(argv[i++]);
+	}
+	return ret;
 }

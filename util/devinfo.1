@@ -4,7 +4,7 @@
 .SH NAME
 devinfo \- print information about a device
 .SH SYNOPSIS
-.BI "devinfo " /dev/node
+.BI "devinfo " /dev/node " ..."
 .SH DESCRIPTION
 .BR devinfo
 prints the corresponding sysfs path and (if applicable)
@@ -18,7 +18,7 @@ $ devinfo /dev/dri/card0
 
 .SS Example 2 shows the "name" assgned by the kernel to each input device:
 .nf
-$ for i in /dev/input/*; do a=`devinfo $i | cut -f1`; if [ -n "$a" ]; then cat $a/name; fi; done
+$ devinfo /dev/input/*
 AT Translated Set 2 keyboard
 HDA Digital PCBeep
 HDA VIA VT82xx Front Headphone
