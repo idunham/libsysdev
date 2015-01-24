@@ -8,3 +8,4 @@
 *.swp
 core
 devinfo
+*.pc
