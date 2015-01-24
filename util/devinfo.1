@@ -16,9 +16,9 @@ $ devinfo /dev/dri/card0
 /sys//devices/pci0000:00/0000:00:02.0/drm/card0/device	8086	27AE 
 .fi
 
-.SS Example 2 shows the "name" assgned by the kernel to each input device:
+.SS Example 2 shows the "name" assigned by the kernel to each input device:
 .nf
-$ devinfo /dev/input/*
+$ for i in `devinfo /dev/input/* |cut -f1`; do cat "$i"/name; done
 AT Translated Set 2 keyboard
 HDA Digital PCBeep
 HDA VIA VT82xx Front Headphone
