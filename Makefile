@@ -29,7 +29,7 @@ LIBS   ?= libsysdev.a libsysdev.so.${SOVER}
 # the same ABI.
 # SOMIN is the minor version; update for a release with a new symbol export
 # AROBJS/SOOBJS should be updated to add new source files.
-PKGVER  = 0.1.0
+PKGVER  = 0.1.1
 SOVER   = 0
 SOMIN   = 0
 AROBJS  = getprodids.o  \

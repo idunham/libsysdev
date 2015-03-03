@@ -15,6 +15,10 @@ enough for evdev, while mesa would need sysdev_getproductids() as well.
 
 Thanks to Karl Hammar for inspiration to do this.
 
+To use this with the evdev driver, fetch and build
+https://github.com/idunham/xf86-input-evdev
+(in branch sysdev).
+
 Copyright/license:
 See LICENSE and the individual files for license information.
 The bulk of the library is copyright
@@ -24,10 +28,6 @@ The bulk of the library is copyright
 TODO:
 * Handle multiarch and multilib configurations better than
   expecting the builder to set LIBDIR.
-* (WIP) Get evdev to use this.
-  A first try, which has *not* been tested beyond compile, is available at
-  https://github.com/idunham/xf86-input-evdev
-  (in branch sysdev).
 
 API:
 libsysdev uses the sysdev_ namespace for public APIs.
