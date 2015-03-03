@@ -42,17 +42,17 @@ a path of the general form
 .I /sys/devices/.../device
 that corresponds to the device described by the arguments.
 
+Note that, for simplicity of implementation, this version of
+.BR libsysdev ()
+returns a syspath of the form
+.IR /sys//devices/...
+(note the double slash); relying on a fixed offset from the start is wrong,
+and this behavior may well change in future.
+
 .BI sysdev_devfd_to_syspath( devfd )
 takes as its only argument a file descriptor
 referring to a device node. It returns the same output as
 .BR sysdev_getsyspath ().
-
-Note that, for simplicity of implementation, this version of
-.BR libsysdev ()
-uses
-.IR /sys/devices/... ;
-relying on a fixed offset from the start is wrong,
-and this behavior may well change in future.
 
 .BI sysdev_devfd_to_sysfd( devfd )
 takes as its only argument a file descriptor
